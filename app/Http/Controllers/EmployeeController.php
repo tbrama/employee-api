@@ -140,4 +140,17 @@ class EmployeeController extends Controller
         $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA002', '" . $updateby . "', NOW(), '" . $nip . "')");
         return response()->json($response);
     }
+
+    public function deleteemp(Request $request)
+    {
+        $nip = $request->input('nip');
+        $updateby = $request->input('updateby');
+
+        $qdelete = mysqli_query($this->getconn(), "DELETE FROM m_employee WHERE nip = '" . $nip . "'");
+
+        $response['delete'] = $qdelete;
+
+        $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA003', '" . $updateby . "', NOW(), '" . $nip . "')");
+        return response()->json($response);
+    }
 }
