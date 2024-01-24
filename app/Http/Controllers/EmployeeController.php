@@ -73,4 +73,41 @@ class EmployeeController extends Controller
         $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA001', '" . $addby . "', NOW(), '" . $nip . "')");
         return response()->json($response);
     }
+
+    public function listemp()
+    {
+        $response['ls_employee'] = array();
+        $qls = mysqli_query($this->getconn(), "SELECT a.nip, a.nmlengkap, a.tgllahir, a.tmplahir, a.jnskelamin, a.alamat, a.telepon, a.tglbekerja, " .
+            "a.tglakhirkontrak, b.namastatus, c.namadept, d.namajabatan, a.email, a.agama, a.statusmenikah, " .
+            "e.nmlengkap AS addby, a.addat, f.nmlengkap AS lastupdateby, a.updateat FROM m_employee a " .
+            "INNER JOIN m_status b ON b.idstatus = a.`status` " .
+            "INNER JOIN m_departemen c ON c.id_dept = a.dept " .
+            "INNER JOIN m_jabatan d ON d.idjabatan = a.jabatan " .
+            "LEFT JOIN (SELECT nmlengkap, nip FROM m_employee) e ON e.nip = a.addby " .
+            "LEFT JOIN (SELECT nmlengkap, nip FROM m_employee) f ON f.nip = a.lastupdateby ");
+        while ($rls = mysqli_fetch_array($qls)) {
+            $ls = [];
+            $ls['nmlengkap'] = $rls['nmlengkap'];
+            $ls['tgllahir'] = $rls['tgllahir'];
+            $ls['tmplahir'] = $rls['tmplahir'];
+            $ls['jnskelamin'] = $rls['jnskelamin'];
+            $ls['alamat'] = $rls['alamat'];
+            $ls['telepon'] = $rls['telepon'];
+            $ls['tglbekerja'] = $rls['tglbekerja'];
+            $ls['tglakhirkontrak'] = $rls['tglakhirkontrak'];
+            $ls['namastatus'] = $rls['namastatus'];
+            $ls['namadept'] = $rls['namadept'];
+            $ls['namajabatan'] = $rls['namajabatan'];
+            $ls['email'] = $rls['email'];
+            $ls['agama'] = $rls['agama'];
+            $ls['statusmenikah'] = $rls['statusmenikah'];
+            $ls['addby'] = $rls['addby'];
+            $ls['addat'] = $rls['addat'];
+            $ls['lastupdateby'] = $rls['lastupdateby'];
+            $ls['updateat'] = $rls['updateat'];
+            array_push($response['ls_employee'], $ls);
+        }
+
+        return response()->json($response);
+    }
 }
