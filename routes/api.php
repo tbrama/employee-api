@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('addemp', [EmployeeController::class, 'addemp']);
 Route::get('listemp', [EmployeeController::class, 'listemp']);
+Route::post('updateemp', [EmployeeController::class, 'updateemp']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

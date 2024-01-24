@@ -61,13 +61,13 @@ class EmployeeController extends Controller
         $agama = $request->input('agama');
         $statusmenikah = $request->input('statusmenikah');
         $addby = $request->input('addby');
+
         $qnip = mysqli_query($this->getconn(), "SELECT getnip('A') AS nip");
         while ($rnip = mysqli_fetch_array($qnip)) {
             $nip = $rnip['nip'];
         }
         $pass = Hash::make($nip);
-
-        $qadd = mysqli_query($this->getconn(), "INSERT INTO m_employee (nip, nmlengkap, tgllahir, tmplahir, jnskelamin, alamat, telepon, tglbekerja, tglakhirkontrak, status, dept, jabatan, email, agama, statusmenikah, addby, addat, lastupdateby, updateat, password) VALUES ('" . $nip . "', '" . $nmlengkap . "', '" . $tgllahir . "', '" . $tmplahir . "', '" . $jnskelamin . "', '" . $alamat . "', '" . $telepon . "', '" . $tglbekerja . "', '" . $tglakhirkontrak . "', '" . $status . "', '" . $dept . "', '" . $jabatan . "', '" . $email . "', '" . $agama . "', '" . $statusmenikah . "', '" . $addby . "', NOW(), '" . $addby . "', NOW(), '" . $pass . "')");
+        $qadd = mysqli_query($this->getconn(), "INSERT INTO m_employee (nip, nmlengkap, tgllahir, tmplahir, jnskelamin, alamat, telepon, tglbekerja, tglakhirkontrak, status, dept, jabatan, email, agama, statusmenikah, addby, addat, lastupdateby, updateat, password) SELECT '" . $nip . "', '" . $nmlengkap . "', '" . $tgllahir . "', '" . $tmplahir . "', '" . $jnskelamin . "', '" . $alamat . "', '" . $telepon . "', '" . $tglbekerja . "', NULLIF('" . $tglakhirkontrak . "',''), '" . $status . "', '" . $dept . "', '" . $jabatan . "', '" . $email . "', '" . $agama . "', '" . $statusmenikah . "', '" . $addby . "', NOW(), '" . $addby . "', NOW(), '" . $pass . "'");
         $response['add'] = $qadd;
 
         $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA001', '" . $addby . "', NOW(), '" . $nip . "')");
@@ -80,7 +80,7 @@ class EmployeeController extends Controller
         $qls = mysqli_query($this->getconn(), "SELECT a.nip, a.nmlengkap, a.tgllahir, a.tmplahir, a.jnskelamin, a.alamat, a.telepon, a.tglbekerja, " .
             "a.tglakhirkontrak, b.namastatus, c.namadept, d.namajabatan, a.email, a.agama, a.statusmenikah, " .
             "e.nmlengkap AS addby, a.addat, f.nmlengkap AS lastupdateby, a.updateat FROM m_employee a " .
-            "INNER JOIN m_status b ON b.idstatus = a.`status` " .
+            "INNER JOIN m_status b ON b.idstatus = a.status " .
             "INNER JOIN m_departemen c ON c.id_dept = a.dept " .
             "INNER JOIN m_jabatan d ON d.idjabatan = a.jabatan " .
             "LEFT JOIN (SELECT nmlengkap, nip FROM m_employee) e ON e.nip = a.addby " .
@@ -108,6 +108,36 @@ class EmployeeController extends Controller
             array_push($response['ls_employee'], $ls);
         }
 
+        return response()->json($response);
+    }
+
+    public function updateemp(Request $request)
+    {
+        $nip = $request->input('nip');
+        $nmlengkap = $request->input('nmlengkap');
+        $tgllahir = $request->input('tgllahir');
+        $tmplahir = $request->input('tmplahir');
+        $jnskelamin = $request->input('jnskelamin');
+        $alamat = $request->input('alamat');
+        $telepon = $request->input('telepon');
+        $tglbekerja = $request->input('tglbekerja');
+        $tglakhirkontrak = $request->input('tglakhirkontrak');
+        $status = $request->input('status');
+        $dept = $request->input('dept');
+        $jabatan = $request->input('jabatan');
+        $email = $request->input('email');
+        $agama = $request->input('agama');
+        $statusmenikah = $request->input('statusmenikah');
+        $updateby = $request->input('updateby');
+
+        $qupdate = mysqli_query($this->getconn(), "UPDATE m_employee SET nmlengkap = '" . $nmlengkap . "', tgllahir = '" . $tgllahir . "', " .
+            " tmplahir = '" . $tmplahir . "', jnskelamin = '" . $jnskelamin . "', alamat = '" . $alamat . "', telepon = '" . $telepon . "', " .
+            " tglbekerja = NULLIF('" . $tglbekerja . "',''), tglakhirkontrak = NULLIF('" . $tglakhirkontrak . "',''), status = '" . $status . "', dept = '" . $dept . "', " .
+            " jabatan = '" . $jabatan . "', email = '" . $email . "', agama = '" . $agama . "', statusmenikah = '" . $statusmenikah . "', " .
+            " lastupdateby = '" . $updateby . "', updateat = NOW() WHERE nip = '" . $nip . "'");
+        $response['update'] = $qupdate;
+
+        $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA002', '" . $updateby . "', NOW(), '" . $nip . "')");
         return response()->json($response);
     }
 }
