@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use mysqli;
@@ -152,5 +153,31 @@ class EmployeeController extends Controller
 
         $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA003', '" . $updateby . "', NOW(), '" . $nip . "')");
         return response()->json($response);
+    }
+
+    public function login(Request $request)
+    {
+        $nip = $request->input('nip');
+        $pass = $request->input('pass');
+
+        $checkUser = User::where([['nip', $nip], ['password', $pass]])->first();
+
+        if (is_null($checkUser)) {
+            $response = ['data' => null, 'msg' => 'NIP atau Password tidak ditemukan', 'token' => null];
+        } else {
+            $token = $checkUser->createToken('auth-token')->plainTextToken;
+            $response = ['data' => $checkUser, 'msg' => '', 'token' => $token];
+        }
+
+        return response()->json($response);
+    }
+
+    public function logout()
+    {
+        auth()->user()->currentAccessToken()->delete();
+        $res = [
+            'logout' => 'T',
+        ];
+        return response()->json($res);
     }
 }
