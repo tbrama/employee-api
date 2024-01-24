@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use mysqli;
 
 class EmployeeController extends Controller
@@ -60,13 +61,13 @@ class EmployeeController extends Controller
         $agama = $request->input('agama');
         $statusmenikah = $request->input('statusmenikah');
         $addby = $request->input('addby');
-
         $qnip = mysqli_query($this->getconn(), "SELECT getnip('A') AS nip");
         while ($rnip = mysqli_fetch_array($qnip)) {
             $nip = $rnip['nip'];
         }
+        $pass = Hash::make($nip);
 
-        $qadd = mysqli_query($this->getconn(), "INSERT INTO m_employee (nip, nmlengkap, tgllahir, tmplahir, jnskelamin, alamat, telepon, tglbekerja, tglakhirkontrak, status, dept, jabatan, email, agama, statusmenikah, addby, addat, lastupdateby, updateat, password) VALUES ('" . $nip . "', '" . $nmlengkap . "', '" . $tgllahir . "', '" . $tmplahir . "', '" . $jnskelamin . "', '" . $alamat . "', '" . $telepon . "', '" . $tglbekerja . "', '" . $tglakhirkontrak . "', '" . $status . "', '" . $dept . "', '" . $jabatan . "', '" . $email . "', '" . $agama . "', '" . $statusmenikah . "', '" . $addby . "', NOW(), '" . $addby . "', NOW(), '" . $nip . "')");
+        $qadd = mysqli_query($this->getconn(), "INSERT INTO m_employee (nip, nmlengkap, tgllahir, tmplahir, jnskelamin, alamat, telepon, tglbekerja, tglakhirkontrak, status, dept, jabatan, email, agama, statusmenikah, addby, addat, lastupdateby, updateat, password) VALUES ('" . $nip . "', '" . $nmlengkap . "', '" . $tgllahir . "', '" . $tmplahir . "', '" . $jnskelamin . "', '" . $alamat . "', '" . $telepon . "', '" . $tglbekerja . "', '" . $tglakhirkontrak . "', '" . $status . "', '" . $dept . "', '" . $jabatan . "', '" . $email . "', '" . $agama . "', '" . $statusmenikah . "', '" . $addby . "', NOW(), '" . $addby . "', NOW(), '" . $pass . "')");
         $response['add'] = $qadd;
 
         $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA001', '" . $addby . "', NOW(), '" . $nip . "')");
