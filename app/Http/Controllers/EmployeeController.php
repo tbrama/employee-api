@@ -287,6 +287,10 @@ class EmployeeController extends Controller
             $response = ['data' => null, 'msg' => 'Password salah', 'token' => null];
             return response()->json($response);
         }
+        if ($checkUser['dept'] != 'DP24010000001' && $checkUser['dept'] != 'DP24010000005') {
+            $response = ['data' => null, 'msg' => 'Anda tidak memiliki izin untuk mengakses aplikasi Employee Management', 'token' => null];
+            return response()->json($response);
+        }
         $checkUser['nip2'] = $nip;
         $token = $checkUser->createToken('auth-token')->plainTextToken;
         $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA004', '" . $nip . "', NOW(), '')");
