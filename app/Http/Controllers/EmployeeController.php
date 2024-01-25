@@ -55,9 +55,9 @@ class EmployeeController extends Controller
         $telepon = $request->input('telepon');
         $tglbekerja = $request->input('tglbekerja');
         $tglakhirkontrak = $request->input('tglakhirkontrak');
-        $status = $request->input('status');
-        $dept = $request->input('dept');
-        $jabatan = $request->input('jabatan');
+        $status = $request->input('namastatus');
+        $dept = $request->input('namadept');
+        $jabatan = $request->input('namajabatan');
         $email = $request->input('email');
         $agama = $request->input('agama');
         $statusmenikah = $request->input('statusmenikah');
@@ -110,6 +110,21 @@ class EmployeeController extends Controller
             array_push($response['ls_employee'], $ls);
         }
 
+        $response['lsdept'] = array();
+        $qls = mysqli_query($this->getconn(), "SELECT * FROM m_departemen");
+        while ($rdp = mysqli_fetch_array($qls)) {
+            array_push($response['lsdept'], ['text' => $rdp['namadept'], 'valOpt' => $rdp['id_dept']]);
+        }
+        array_push($response['lsdept'], ['text' => 'Pilih Departemen', 'valOpt' => 'X']);
+
+        $response['lsstatus'] = array();
+        $qls = mysqli_query($this->getconn(), "SELECT * FROM m_status");
+        while ($rdp = mysqli_fetch_array($qls)) {
+            array_push($response['lsstatus'], ['text' => 'Pilih Status', 'valOpt' => 'X']);
+        }
+
+        $response['lsjnskelamin'] = array(['text' => 'Pilih Jenis Kelamin', 'valOpt' => 'X'], ['text' => 'PRIA', 'valOpt' => 'PRIA'], ['text' => 'WANITA', 'valOpt' => 'WANITA']);
+
         return response()->json($response);
     }
 
@@ -143,23 +158,6 @@ class EmployeeController extends Controller
         return response()->json($response);
     }
 
-    public function listdeptstat()
-    {
-        $response['lsdept'] = array();
-        $qls = mysqli_query($this->getconn(), "SELECT * FROM m_departemen");
-        while ($rdp = mysqli_fetch_array($qls)) {
-            array_push($response['lsdept'], ['text' => $rdp['namadept'], 'valOpt' => $rdp['id_dept']]);
-        }
-
-        $response['lsstatus'] = array();
-        $qls = mysqli_query($this->getconn(), "SELECT * FROM m_status");
-        while ($rdp = mysqli_fetch_array($qls)) {
-            array_push($response['lsstatus'], ['text' => $rdp['namastatus'], 'valOpt' => $rdp['idstatus']]);
-        }
-
-        return response()->json($response);
-    }
-
     public function listjabatan(Request $request)
     {
         $iddept = $request->route('iddept');
@@ -168,6 +166,7 @@ class EmployeeController extends Controller
         while ($rdp = mysqli_fetch_array($qls)) {
             array_push($response['lsjab'], ['text' => $rdp['namajabatan'], 'valOpt' => $rdp['idjabatan']]);
         }
+        array_push($response['lsjab'], ['text' => 'Pilih Jabatan', 'valOpt' => 'X']);
 
         return response()->json($response);
     }

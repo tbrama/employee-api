@@ -21,12 +21,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('listemp', [EmployeeController::class, 'listemp']);
     Route::post('updateemp', [EmployeeController::class, 'updateemp']);
     Route::post('deleteemp', [EmployeeController::class, 'deleteemp']);
+    Route::get('/listjabatan/{iddept}', [EmployeeController::class, 'listjabatan']);
 
     Route::post('logout', [EmployeeController::class, 'logout']);
 });
-
-Route::get('listdeptstat', [EmployeeController::class, 'listdeptstat']);
-Route::get('/listjabatan/{iddept}', [EmployeeController::class, 'listjabatan']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
