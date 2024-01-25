@@ -193,6 +193,7 @@ class EmployeeController extends Controller
             array_push($response, ['text' => $rdp['namadept'], 'valOpt' => $rdp['id_dept']]);
         }
         array_unshift($response, ['text' => 'Pilih Departemen', 'valOpt' => 'X']);
+        return response()->json($response);
     }
 
     public function adddepartemen(Request $request)
