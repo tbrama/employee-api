@@ -88,6 +88,7 @@ class EmployeeController extends Controller
             "LEFT JOIN (SELECT nmlengkap, nip FROM m_employee) f ON f.nip = a.lastupdateby ");
         while ($rls = mysqli_fetch_array($qls)) {
             $ls = [];
+            $ls['nip'] = $rls['nip'];
             $ls['nmlengkap'] = $rls['nmlengkap'];
             $ls['tgllahir'] = $rls['tgllahir'];
             $ls['tmplahir'] = $rls['tmplahir'];
