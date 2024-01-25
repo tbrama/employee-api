@@ -185,6 +185,18 @@ class EmployeeController extends Controller
         return response()->json($response);
     }
 
+    public function adddepartemen(Request $request)
+    {
+        $nip = $request->input('nip');
+        $namadept = $request->input('namadept');
+
+        $qdp = mysqli_query($this->getconn(), "INSERT INTO m_departemen (id_dept, namadept) SELECT get_iddept('DP') AS id_dept, '" . $namadept . "'");
+        $response['adddept'] = $qdp;
+
+        $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA005', '" . $nip . "', NOW(), '" . $namadept . "')");
+        return response()->json($response);
+    }
+
     public function login(Request $request)
     {
         $nip = $request->input('nip');

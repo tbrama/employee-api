@@ -22,6 +22,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('updateemp', [EmployeeController::class, 'updateemp']);
     Route::post('deleteemp', [EmployeeController::class, 'deleteemp']);
     Route::get('/listjabatan/{iddept}', [EmployeeController::class, 'listjabatan']);
+    Route::post('adddepartemen', [EmployeeController::class, 'adddepartemen']);
+
 
     Route::post('logout', [EmployeeController::class, 'logout']);
 });
