@@ -216,6 +216,7 @@ class EmployeeController extends Controller
             array_push($response, ['text' => $rdp['namastatus'], 'valOpt' => $rdp['idstatus']]);
         }
         array_unshift($response, ['text' => 'Pilih Status', 'valOpt' => 'X']);
+        return response()->json($response);
     }
 
     public function addstatus(Request $request)
@@ -265,7 +266,7 @@ class EmployeeController extends Controller
         $namajab = $request->input('namajab');
         $iddept = $request->input('iddept');
 
-        $qdp = mysqli_query($this->getconn(), "INSERT INTO m_jabatan (idjabatan, iddept, namajabatan) SELECT get_jabatan('JB') AS idjabatan, '" . $iddept . "', '" . $namajab . "')");
+        $qdp = mysqli_query($this->getconn(), "INSERT INTO m_jabatan (idjabatan, iddept, namajabatan) SELECT get_jabatan('JB') AS idjabatan, '" . $iddept . "', '" . $namajab . "'");
         $response['addjab'] = $qdp;
 
         $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA007', '" . $nip . "', NOW(), '" . $namajab . "')");
