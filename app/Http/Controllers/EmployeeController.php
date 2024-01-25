@@ -142,6 +142,35 @@ class EmployeeController extends Controller
         return response()->json($response);
     }
 
+    public function listdeptstat()
+    {
+        $response['lsdept'] = array();
+        $qls = mysqli_query($this->getconn(), "SELECT * FROM m_departemen");
+        while ($rdp = mysqli_fetch_array($qls)) {
+            array_push($response['lsdept'], ['text' => $rdp['namadept'], 'valOpt' => $rdp['id_dept']]);
+        }
+
+        $response['lsstatus'] = array();
+        $qls = mysqli_query($this->getconn(), "SELECT * FROM m_status");
+        while ($rdp = mysqli_fetch_array($qls)) {
+            array_push($response['lsstatus'], ['text' => $rdp['namastatus'], 'valOpt' => $rdp['idstatus']]);
+        }
+
+        return response()->json($response);
+    }
+
+    public function listjabatan(Request $request)
+    {
+        $iddept = $request->route('iddept');
+        $response['lsjab'] = array();
+        $qls = mysqli_query($this->getconn(), "SELECT idjabatan, namajabatan FROM m_jabatan WHERE iddept = '" . $iddept . "'");
+        while ($rdp = mysqli_fetch_array($qls)) {
+            array_push($response['lsjab'], ['text' => $rdp['namajabatan'], 'valOpt' => $rdp['idjabatan']]);
+        }
+
+        return response()->json($response);
+    }
+
     public function deleteemp(Request $request)
     {
         $nip = $request->input('nip');
@@ -166,6 +195,7 @@ class EmployeeController extends Controller
             $response = ['data' => null, 'msg' => 'NIP atau Password tidak ditemukan', 'token' => null];
         } else {
             $token = $checkUser->createToken('auth-token')->plainTextToken;
+            $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA004', '" . $nip . "', NOW(), '')");
             $response = ['data' => $checkUser, 'msg' => '', 'token' => $token];
         }
 
