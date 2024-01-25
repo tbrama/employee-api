@@ -115,13 +115,14 @@ class EmployeeController extends Controller
         while ($rdp = mysqli_fetch_array($qls)) {
             array_push($response['lsdept'], ['text' => $rdp['namadept'], 'valOpt' => $rdp['id_dept']]);
         }
-        array_push($response['lsdept'], ['text' => 'Pilih Departemen', 'valOpt' => 'X']);
+        array_unshift($response['lsdept'], ['text' => 'Pilih Departemen', 'valOpt' => 'X']);
 
         $response['lsstatus'] = array();
         $qls = mysqli_query($this->getconn(), "SELECT * FROM m_status");
         while ($rdp = mysqli_fetch_array($qls)) {
-            array_push($response['lsstatus'], ['text' => 'Pilih Status', 'valOpt' => 'X']);
+            array_push($response['lsstatus'], ['text' => $rdp['namastatus'], 'valOpt' => $rdp['idstatus']]);
         }
+        array_unshift($response['lsstatus'], ['text' => 'Pilih Status', 'valOpt' => 'X']);
 
         $response['lsjnskelamin'] = array(['text' => 'Pilih Jenis Kelamin', 'valOpt' => 'X'], ['text' => 'PRIA', 'valOpt' => 'PRIA'], ['text' => 'WANITA', 'valOpt' => 'WANITA']);
 
@@ -161,12 +162,12 @@ class EmployeeController extends Controller
     public function listjabatan(Request $request)
     {
         $iddept = $request->route('iddept');
-        $response['lsjab'] = array();
+        $response = array();
         $qls = mysqli_query($this->getconn(), "SELECT idjabatan, namajabatan FROM m_jabatan WHERE iddept = '" . $iddept . "'");
         while ($rdp = mysqli_fetch_array($qls)) {
-            array_push($response['lsjab'], ['text' => $rdp['namajabatan'], 'valOpt' => $rdp['idjabatan']]);
+            array_push($response, ['text' => $rdp['namajabatan'], 'valOpt' => $rdp['idjabatan']]);
         }
-        array_push($response['lsjab'], ['text' => 'Pilih Jabatan', 'valOpt' => 'X']);
+        array_unshift($response, ['text' => 'Pilih Jabatan', 'valOpt' => 'X']);
 
         return response()->json($response);
     }
@@ -189,15 +190,19 @@ class EmployeeController extends Controller
         $nip = $request->input('nip');
         $pass = $request->input('pass');
 
-        $checkUser = User::where([['nip', $nip], ['password', $pass]])->first();
-
+        $checkUser = User::where([['nip', $nip]])->first();
         if (is_null($checkUser)) {
-            $response = ['data' => null, 'msg' => 'NIP atau Password tidak ditemukan', 'token' => null];
-        } else {
-            $token = $checkUser->createToken('auth-token')->plainTextToken;
-            $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA004', '" . $nip . "', NOW(), '')");
-            $response = ['data' => $checkUser, 'msg' => '', 'token' => $token];
+            $response = ['data' => null, 'msg' => 'NIP tidak ditemukan', 'token' => null];
+            return response()->json($response);
         }
+        if (!Hash::check($pass, $checkUser->password)) {
+            $response = ['data' => null, 'msg' => 'Password salah', 'token' => null];
+            return response()->json($response);
+        }
+        $checkUser['nip2'] = $nip;
+        $token = $checkUser->createToken('auth-token')->plainTextToken;
+        $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA004', '" . $nip . "', NOW(), '')");
+        $response = ['data' => $checkUser, 'msg' => '', 'token' => $token];
 
         return response()->json($response);
     }
