@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 25, 2024 at 11:36 PM
+-- Generation Time: Jan 26, 2024 at 12:30 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -220,7 +220,11 @@ INSERT INTO `log_employee` (`id`, `nip`, `idactivity`, `timelog`, `ket`) VALUES
 (26, 'admin', 'LA005', '2024-01-26 05:25:48', 'Marketing'),
 (27, 'admin', 'LA006', '2024-01-26 05:26:02', 'KONTRAK'),
 (28, 'admin', 'LA007', '2024-01-26 05:32:31', 'Fullstack Developer'),
-(29, 'admin', 'LA002', '2024-01-26 05:34:49', 'A24010000004');
+(29, 'admin', 'LA002', '2024-01-26 05:34:49', 'A24010000004'),
+(30, 'admin', 'LA007', '2024-01-26 06:03:20', 'Staff HR'),
+(31, 'admin', 'LA001', '2024-01-26 06:04:14', 'A24010000005'),
+(32, 'A24010000005', 'LA004', '2024-01-26 06:08:56', ''),
+(33, 'admin', 'LA004', '2024-01-26 06:09:17', '');
 
 -- --------------------------------------------------------
 
@@ -287,8 +291,8 @@ CREATE TABLE `m_counter` (
 
 INSERT INTO `m_counter` (`nmcounter`, `count`) VALUES
 ('dept', 7),
-('jabatan', 2),
-('nip', 4),
+('jabatan', 3),
+('nip', 5),
 ('status', 4);
 
 -- --------------------------------------------------------
@@ -351,6 +355,7 @@ CREATE TABLE `m_employee` (
 INSERT INTO `m_employee` (`nip`, `nmlengkap`, `tgllahir`, `tmplahir`, `jnskelamin`, `alamat`, `telepon`, `tglbekerja`, `tglakhirkontrak`, `status`, `dept`, `jabatan`, `email`, `agama`, `statusmenikah`, `addby`, `addat`, `lastupdateby`, `updateat`, `password`) VALUES
 ('A24010000001', 'ADMIN2', '2024-01-25', 'Bandung', 'PRIA', '-', '12345678990', '2024-01-25', NULL, 'ST24010000001', 'DP24010000001', 'JB24010000001', 'admin@admin.aa', 'Islam', 'Belum', 'ADMIN', '2024-01-25 04:14:39', 'ADMIN', '2024-01-25 04:48:23', '$2y$12$.5gtGwg./TLUiyeNE3TjvOBEjKY.sP5h3bwbB86tUae369fNNpIPe'),
 ('A24010000004', 'Tubagus Rahman Ramadan', '2024-01-26', 'Bandung', 'PRIA', 'Komp. Taman Raflesia No. E46', '082116822007', '2024-01-26', NULL, 'ST24010000001', 'DP24010000002', 'JB24010000002', 'tubagusrahmanr@gmail.com', 'Islam', 'Belum', 'admin', '2024-01-26 00:16:28', 'admin', '2024-01-26 05:34:49', '$2y$12$2bNsfmpE874hK9xL.d3fcO9BjoWo33ODH0yyftEy.7WcEo7tpioVC'),
+('A24010000005', 'Rama', '1998-01-08', 'Bandung', 'PRIA', 'Komp. Taman Raflesia No. E46', '082116822007', '2024-01-26', NULL, 'ST24010000001', 'DP24010000005', 'JB24010000003', 'tbrama98@gmail.com', 'Islam', 'belum', 'admin', '2024-01-26 06:04:14', 'admin', '2024-01-26 06:04:14', '$2y$12$AfE3/.iuoBYLTA/gb0fI2.vo9MhKm9REqRZKw977xrL2LaSPh2QEG'),
 ('admin', 'SUPER ADMIN', '2024-01-25', 'Bandung', 'PRIA', '-', '12345678990', '2024-01-25', NULL, 'ST24010000001', 'DP24010000001', 'JB24010000001', 'admin@admin.aa', 'Islam', 'Belum', 'ADMIN', '2024-01-25 03:23:29', 'ADMIN', '2024-01-25 03:23:29', '$2y$12$iqW/D9KmA6tAKIjIj57cx.aZGKe59JYgNkPp.hqGKo4iexQkRVpva');
 
 -- --------------------------------------------------------
@@ -371,7 +376,8 @@ CREATE TABLE `m_jabatan` (
 
 INSERT INTO `m_jabatan` (`idjabatan`, `iddept`, `namajabatan`) VALUES
 ('JB24010000001', 'DP24010000001', 'ADMIN'),
-('JB24010000002', 'DP24010000002', 'Fullstack Developer');
+('JB24010000002', 'DP24010000002', 'Fullstack Developer'),
+('JB24010000003', 'DP24010000005', 'Staff HR');
 
 -- --------------------------------------------------------
 
@@ -429,8 +435,7 @@ CREATE TABLE `personal_access_tokens` (
 --
 
 INSERT INTO `personal_access_tokens` (`id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `expires_at`, `created_at`, `updated_at`) VALUES
-(7, 'App\\Models\\User', 0, 'auth-token', 'e6006af8176a7abd033831de9778e6ed05d60bd79178d7d205aa2287288de4f8', '[\"*\"]', NULL, NULL, '2024-01-25 09:48:40', '2024-01-25 09:48:40'),
-(8, 'App\\Models\\User', 0, 'auth-token', '9d31494e312c83b57807aec8ea0f36677f1e873b462c4d25b9fa3b599521c0ab', '[\"*\"]', '2024-01-25 15:35:10', NULL, '2024-01-25 09:49:14', '2024-01-25 15:35:10');
+(7, 'App\\Models\\User', 0, 'auth-token', 'e6006af8176a7abd033831de9778e6ed05d60bd79178d7d205aa2287288de4f8', '[\"*\"]', NULL, NULL, '2024-01-25 09:48:40', '2024-01-25 09:48:40');
 
 -- --------------------------------------------------------
 
@@ -543,7 +548,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `log_employee`
 --
 ALTER TABLE `log_employee`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -555,7 +560,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `users`
