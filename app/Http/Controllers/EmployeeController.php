@@ -85,7 +85,7 @@ class EmployeeController extends Controller
             "INNER JOIN m_departemen c ON c.id_dept = a.dept " .
             "INNER JOIN m_jabatan d ON d.idjabatan = a.jabatan " .
             "LEFT JOIN (SELECT nmlengkap, nip FROM m_employee) e ON e.nip = a.addby " .
-            "LEFT JOIN (SELECT nmlengkap, nip FROM m_employee) f ON f.nip = a.lastupdateby ");
+            "LEFT JOIN (SELECT nmlengkap, nip FROM m_employee) f ON f.nip = a.lastupdateby ORDER BY a.addat DESC");
         while ($rls = mysqli_fetch_array($qls)) {
             $ls = [];
             $ls['nip'] = $rls['nip'];
