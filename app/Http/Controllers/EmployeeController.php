@@ -146,7 +146,7 @@ class EmployeeController extends Controller
         $email = $request->input('email');
         $agama = $request->input('agama');
         $statusmenikah = $request->input('statusmenikah');
-        $updateby = $request->input('updateby');
+        $updateby = $request->input('lastupdateby');
 
         $qupdate = mysqli_query($this->getconn(), "UPDATE m_employee SET nmlengkap = '" . $nmlengkap . "', tgllahir = '" . $tgllahir . "', " .
             " tmplahir = '" . $tmplahir . "', jnskelamin = '" . $jnskelamin . "', alamat = '" . $alamat . "', telepon = '" . $telepon . "', " .
