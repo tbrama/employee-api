@@ -185,6 +185,16 @@ class EmployeeController extends Controller
         return response()->json($response);
     }
 
+    public function listdept()
+    {
+        $response = array();
+        $qls = mysqli_query($this->getconn(), "SELECT * FROM m_departemen");
+        while ($rdp = mysqli_fetch_array($qls)) {
+            array_push($response, ['text' => $rdp['namadept'], 'valOpt' => $rdp['id_dept']]);
+        }
+        array_unshift($response, ['text' => 'Pilih Departemen', 'valOpt' => 'X']);
+    }
+
     public function adddepartemen(Request $request)
     {
         $nip = $request->input('nip');
@@ -194,6 +204,70 @@ class EmployeeController extends Controller
         $response['adddept'] = $qdp;
 
         $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA005', '" . $nip . "', NOW(), '" . $namadept . "')");
+        return response()->json($response);
+    }
+
+    public function liststatus()
+    {
+        $response = array();
+        $qls = mysqli_query($this->getconn(), "SELECT * FROM m_status");
+        while ($rdp = mysqli_fetch_array($qls)) {
+            array_push($response, ['text' => $rdp['namastatus'], 'valOpt' => $rdp['idstatus']]);
+        }
+        array_unshift($response, ['text' => 'Pilih Status', 'valOpt' => 'X']);
+    }
+
+    public function addstatus(Request $request)
+    {
+        $nip = $request->input('nip');
+        $namastatus = $request->input('namastatus');
+
+        $qdp = mysqli_query($this->getconn(), "INSERT INTO m_status (idstatus, namastatus) SELECT get_status('ST') AS idstatus, '" . $namastatus . "'");
+        $response['addstatus'] = $qdp;
+
+        $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA006', '" . $nip . "', NOW(), '" . $namastatus . "')");
+        return response()->json($response);
+    }
+
+    public function listjabatanall()
+    {
+        $response = array();
+        $qls = mysqli_query($this->getconn(), "SELECT idjabatan, namajabatan, iddept, namadept FROM m_jabatan a INNER JOIN m_departemen b ON b.id_dept = a.iddept ORDER BY namadept");
+        while ($rdp = mysqli_fetch_array($qls)) {
+            array_push($response, ['iddept' => $rdp['iddept'], 'namadept' => $rdp['namadept'], 'idjabatan' => $rdp['idjabatan'], 'namajabatan' => $rdp['namajabatan']]);
+        }
+
+        $dept = collect($response)->unique('iddept')->values();
+        $res = array();
+        for ($i = 0; $i < count($dept); $i++) {
+            $dp = [];
+            $dp['iddept'] = $dept[$i]['iddept'];
+            $dp['namadept'] = $dept[$i]['namadept'];
+            $dp['lsjab'] = array();
+
+            $dps = collect($response)->where('iddept', $dept[$i]['iddept'])->values();
+            for ($x = 0; $x < count($dps); $x++) {
+                $jb = [];
+                $jb['idjabatan'] = $dps[$x]['idjabatan'];
+                $jb['namajabatan'] = $dps[$x]['namajabatan'];
+                array_push($dp['lsjab'], $jb);
+            }
+            array_push($res, $dp);
+        }
+
+        return response()->json($res);
+    }
+
+    public function addjabatan(Request $request)
+    {
+        $nip = $request->input('nip');
+        $namajab = $request->input('namajab');
+        $iddept = $request->input('iddept');
+
+        $qdp = mysqli_query($this->getconn(), "INSERT INTO m_jabatan (idjabatan, iddept, namajabatan) SELECT get_jabatan('JB') AS idjabatan, '" . $iddept . "', '" . $namajab . "')");
+        $response['addjab'] = $qdp;
+
+        $qlog = mysqli_query($this->getconn(), "INSERT INTO log_employee (idactivity, nip, timelog, ket) VALUES ('LA007', '" . $nip . "', NOW(), '" . $namajab . "')");
         return response()->json($response);
     }
 
