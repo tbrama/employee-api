@@ -140,9 +140,9 @@ class EmployeeController extends Controller
         $telepon = $request->input('telepon');
         $tglbekerja = $request->input('tglbekerja');
         $tglakhirkontrak = $request->input('tglakhirkontrak');
-        $status = $request->input('status');
-        $dept = $request->input('dept');
-        $jabatan = $request->input('jabatan');
+        $status = $request->input('namastatus');
+        $dept = $request->input('namadept');
+        $jabatan = $request->input('namajabatan');
         $email = $request->input('email');
         $agama = $request->input('agama');
         $statusmenikah = $request->input('statusmenikah');
